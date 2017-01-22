@@ -205,7 +205,34 @@
     <property name="requestContextAttribute" value="rc" />
     <property name="cache" value="true"/>
   </bean>
-
+  
+  
+  <bean id="jinjaEngine" class="com.hubspot.jinjava.Jinjava">
+  	<property name="resourceLocator" ref="jinjaResourceLocator"/>
+  </bean>
+  
+  <bean id="jinjaResourceLocator" class="com.jeroenreijn.examples.jinjava.JinjaSpringResourceLocator">
+ 	<property name="prefix" value="" />
+  </bean>
+  
+  <bean id="jinjaViewResolver" class="com.jeroenreijn.examples.jinjava.JinjaViewResolver">
+    <property name="viewNames" value="*-j2"/>
+    <property name="prefix" value="/WEB-INF/jinja/"/>
+    <property name="suffix" value=".j2"/>
+    <property name="order" value="13"/>
+    <property name="requestContextAttribute" value="rc" />
+    <property name="cache" value="true"/>
+    <property name="engine" ref="jinjaEngine"></property>
+  </bean>
+  
+  <bean id="jijnaTranslateFilter" class="com.jeroenreijn.examples.jinjava.TranslateFilter">
+  	<property name="engine" ref="jinjaEngine"></property>
+  </bean>
+  
+  <bean id="jinjaPathFilter" class="com.jeroenreijn.examples.jinjava.PathFilter">
+  <property name="engine" ref="jinjaEngine"></property>
+  </bean>
+  
   <bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver">
     <property name="defaultLocale" value="en"/>
   </bean>
@@ -214,8 +241,8 @@
     <property name="messageSource" ref="messageSource"/>
     <property name="localeResolver" ref="localeResolver"/>
   </bean>
-
-  <!-- Configuring messages.properties file -->
+  
+   <!-- Configuring messages.properties file -->
   <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource"
         p:basename="messages"/>
 
